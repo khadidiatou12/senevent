@@ -1,5 +1,6 @@
 import { useState } from "react";
 import EvenementCarte from "./components/EvenementCarte";
+import styles from "./App.module.css";
 
 const App = () => {
   const [evenements, setEvenements] = useState([]);
@@ -18,13 +19,12 @@ const App = () => {
   };
 
   return (
-    <div style={{ maxWidth: "700px", margin: "2rem auto" }}>
-      <h1>SenEvent --- Evenements a Dakar</h1>
-      <button onClick={charger} disabled={chargement}>
+    <div className={styles.container}>
+      <h1 className={styles.titre}>SenEvent --- Evenements a Dakar</h1>
+      <button className={styles.bouton} onClick={charger} disabled={chargement}>
         {chargement ? "Chargement..." : "Charger les evenements"}
       </button>
       {evenements.map(ev => (
-        
         <EvenementCarte key={ev.id} ev={ev} afficherDetails={true} />
       ))}
     </div>
