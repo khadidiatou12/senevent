@@ -1,56 +1,48 @@
 import { useState } from "react";
-import SearchBar from "./components/SearchBar";
-import EvenementCarte from "./components/EvenementCarte";
-import styles from "./App.module.css";
+
+const EvenementCarte = ({ ev }) => {
+  const prix = ev.prix === 0 ? "Gratuit" : `${ev.prix} FCFA`;
+  return (
+    <div style={{ border: "1px solid #ccc", padding: "1rem",
+      margin: "0.8rem 0", borderRadius: "8px" }}>
+      <h3 style={{ margin: 0, color: "#1a3a5c" }}>{ev.titre}</h3>
+      <p style={{ margin: "0.2rem 0", color: "#555" }}>
+        Categorie : {ev.categorie}
+      </p>
+      <p style={{ margin: "0.2rem 0", color: "#555" }}>
+        Lieu : {ev.lieu_nom}
+      </p>
+      <p style={{ margin: "0.2rem 0", color: "#ea7d2b", fontWeight: "bold" }}>
+        {prix}
+      </p>
+    </div>
+  );
+};
 
 const App = () => {
   const [evenements, setEvenements] = useState([]);
   const [chargement, setChargement] = useState(false);
-  // Nouvel état pour stocker la requête de recherche de l'utilisateur
-  const [recherche, setRecherche] = useState("");
 
-  // Requête asynchrone pour consommer le fichier JSON local
-  const chargerEvenements = async () => {
+  const charger = async () => {
     setChargement(true);
     try {
       const reponse = await fetch("/evenements.json");
       const data = await reponse.json();
       setEvenements(data);
     } catch (error) {
-      console.error("Erreur lors du chargement des données :", error);
+      console.error("Erreur :", error);
     }
     setChargement(false);
   };
 
-  // Filtrage du tableau en temps réel selon le titre de l'événement
-  const evenementsFiltres = evenements.filter((ev) =>
-    ev.titre.toLowerCase().includes(recherche.toLowerCase())
-  );
-
   return (
-    <div className={styles.container}>
-      <h1 className={styles.title}>SenEvent — Événements à Dakar</h1>
-      
-      <button 
-        className={styles.btnCharger}
-        onClick={chargerEvenements} 
-        disabled={chargement}
-      >
-        {chargement ? "Chargement en cours..." : "Charger les événements"}
+    <div style={{ maxWidth: "700px", margin: "2rem auto",
+      fontFamily: "sans-serif" }}>
+      <h1 style={{ color: "#1a3a5c" }}>SenEvent — Evenements a Dakar</h1>
+      <button onClick={charger} disabled={chargement}>
+        {chargement ? "Chargement..." : "Charger les evenements"}
       </button>
-
-      {/* Affichage de la barre de recherche uniquement si des événements sont chargés */}
-      {evenements.length > 0 && (
-        <>
-          <SearchBar valeur={recherche} onChangement={setRecherche} />
-          <p className={styles.stats}>
-            {evenementsFiltres.length} événement(s) trouvé(s)
-          </p>
-        </>
-      )}
-
-      {/* Boucle d'affichage des composants enfants cartographiés */}
-      {evenementsFiltres.map((ev) => (
+      {evenements.map(ev => (
         <EvenementCarte key={ev.id} ev={ev} />
       ))}
     </div>
