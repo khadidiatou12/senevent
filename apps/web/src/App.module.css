@@ -39,3 +39,23 @@
   font-style: italic;
   color: #7f8c8d;
 }
+
+.message {
+  text-align: center;
+  color: #666;
+  font-style: italic;
+  padding: 2rem;
+}
+
+.erreur {
+  background: #fee;
+  border: 1px solid #fcc;
+  border-radius: 8px;
+  padding: 1rem;
+  margin: 1rem 0;
+  color: #a01a1a;
+}
+
+.erreur button {
+  margin-top: 0.5rem;
+}
