@@ -1,50 +1,75 @@
-import { useState } from "react";
-
-const EvenementCarte = ({ ev }) => {
-  const prix = ev.prix === 0 ? "Gratuit" : `${ev.prix} FCFA`;
-  return (
-    <div style={{ border: "1px solid #ccc", padding: "1rem",
-      margin: "0.8rem 0", borderRadius: "8px" }}>
-      <h3 style={{ margin: 0, color: "#1a3a5c" }}>{ev.titre}</h3>
-      <p style={{ margin: "0.2rem 0", color: "#555" }}>
-        Categorie : {ev.categorie}
-      </p>
-      <p style={{ margin: "0.2rem 0", color: "#555" }}>
-        Lieu : {ev.lieu_nom}
-      </p>
-      <p style={{ margin: "0.2rem 0", color: "#ea7d2b", fontWeight: "bold" }}>
-        {prix}
-      </p>
-    </div>
-  );
-};
+import { useState, useEffect } from 'react';
+import EvenementCarte from './components/EvenementCarte';
+import SearchBar from './components/SearchBar';
+import EtatChargement from './components/EtatChargement';
+import styles from './App.module.css';
 
 const App = () => {
   const [evenements, setEvenements] = useState([]);
-  const [chargement, setChargement] = useState(false);
+  const [chargement, setChargement] = useState(true);
+  const [erreur, setErreur] = useState(null);
+  const [recherche, setRecherche] = useState('');
 
   const charger = async () => {
     setChargement(true);
+    setErreur(null);
     try {
-      const reponse = await fetch("/evenements.json");
+      const reponse = await fetch('/evenements.json');
+      if (!reponse.ok) {
+        throw new Error(`Erreur HTTP ${reponse.status}`);
+      }
       const data = await reponse.json();
       setEvenements(data);
-    } catch (error) {
-      console.error("Erreur :", error);
+    } catch (e) {
+      setErreur(e.message);
+    } finally {
+      setChargement(false);
     }
-    setChargement(false);
   };
 
+  const evenementsFiltres = evenements.filter(ev =>
+    ev.titre.toLowerCase().includes(recherche.toLowerCase())
+  );
+
+  useEffect(() => {
+    charger();
+  }, []);
+
+  useEffect(() => {
+    if (evenementsFiltres.length > 0) {
+      document.title = `(${evenementsFiltres.length}) SenEvent`;
+    } else {
+      document.title = 'SenEvent';
+    }
+  }, [evenementsFiltres.length]);
+
   return (
-    <div style={{ maxWidth: "700px", margin: "2rem auto",
-      fontFamily: "sans-serif" }}>
-      <h1 style={{ color: "#1a3a5c" }}>SenEvent — Evenements a Dakar</h1>
-      <button onClick={charger} disabled={chargement}>
-        {chargement ? "Chargement..." : "Charger les evenements"}
-      </button>
-      {evenements.map(ev => (
-        <EvenementCarte key={ev.id} ev={ev} />
-      ))}
+    <div className={styles.container}>
+      <h1 className={styles.titre}>SenEvent — Événements à Dakar</h1>
+
+      <EtatChargement
+        chargement={chargement}
+        erreur={erreur}
+        onReessayer={charger}
+      />
+
+      {!chargement && !erreur && (
+        <>
+          <SearchBar recherche={recherche} onRecherche={setRecherche} />
+          <p className={styles.compteur}>
+            {evenementsFiltres.length} événement(s) trouvé(s)
+          </p>
+          {evenementsFiltres.length === 0 ? (
+            <p className={styles.messageVide}>
+              Aucun événement ne correspond.
+            </p>
+          ) : (
+            evenementsFiltres.map(ev => (
+              <EvenementCarte key={ev.id} ev={ev} afficherDetails={true} />
+            ))
+          )}
+        </>
+      )}
     </div>
   );
 };

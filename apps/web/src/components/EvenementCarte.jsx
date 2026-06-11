@@ -13,13 +13,7 @@ const EvenementCarte = ({ ev }) => {
       <p className={styles.infoText}><strong>Date :</strong> {ev.date}</p>
       <p className={styles.prixTag}>Prix : {prixAffiche}</p>
       
-      {ev.image_url && (
-        <img 
-          src={ev.image_url} 
-          alt={ev.titre} 
-          className={styles.image} 
-        />
-      )}
+      
     </div>
   );
 };
