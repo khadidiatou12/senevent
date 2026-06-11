@@ -1,13 +1,14 @@
 import { useState, useEffect } from 'react';
 import EvenementCarte from './components/EvenementCarte';
 import SearchBar from './components/SearchBar';
+import EtatChargement from './components/EtatChargement';
 import styles from './App.module.css';
 
 const App = () => {
-  const [evenements,  setEvenements]  = useState([]);
-  const [chargement, setChargement]  = useState(true);
-  const [erreur,     setErreur]      = useState(null);
-  const [recherche,  setRecherche]   = useState('');
+  const [evenements, setEvenements] = useState([]);
+  const [chargement, setChargement] = useState(true);
+  const [erreur, setErreur] = useState(null);
+  const [recherche, setRecherche] = useState('');
 
   const charger = async () => {
     setChargement(true);
@@ -26,13 +27,13 @@ const App = () => {
     }
   };
 
-  useEffect(() => {
-    charger();
-  }, []);
-
   const evenementsFiltres = evenements.filter(ev =>
     ev.titre.toLowerCase().includes(recherche.toLowerCase())
   );
+
+  useEffect(() => {
+    charger();
+  }, []);
 
   useEffect(() => {
     if (evenementsFiltres.length > 0) {
@@ -44,24 +45,24 @@ const App = () => {
 
   return (
     <div className={styles.container}>
-      <h1 className={styles.titre}>SenEvent — Evenements a Dakar</h1>
-      {chargement && (
-        <p className={styles.message}>Chargement des evenements...</p>
-      )}
-      {erreur && (
-        <div className={styles.erreur}>
-          <p>Erreur : {erreur}</p>
-          <button className={styles.bouton} onClick={charger}>Reessayer</button>
-        </div>
-      )}
+      <h1 className={styles.titre}>SenEvent — Événements à Dakar</h1>
+
+      <EtatChargement
+        chargement={chargement}
+        erreur={erreur}
+        onReessayer={charger}
+      />
+
       {!chargement && !erreur && (
         <>
           <SearchBar recherche={recherche} onRecherche={setRecherche} />
           <p className={styles.compteur}>
-            {evenementsFiltres.length} evenement(s) trouve(s)
+            {evenementsFiltres.length} événement(s) trouvé(s)
           </p>
           {evenementsFiltres.length === 0 ? (
-            <p className={styles.message}>Aucun evenement ne correspond.</p>
+            <p className={styles.messageVide}>
+              Aucun événement ne correspond.
+            </p>
           ) : (
             evenementsFiltres.map(ev => (
               <EvenementCarte key={ev.id} ev={ev} afficherDetails={true} />
@@ -74,4 +75,3 @@ const App = () => {
 };
 
 export default App;
-
