@@ -4,10 +4,10 @@ import SearchBar from './components/SearchBar';
 import styles from './App.module.css';
 
 const App = () => {
-  const [evenements, setEvenements] = useState([]);
-  const [chargement, setChargement] = useState(true);
-  const [erreur, setErreur] = useState(null);
-  const [recherche, setRecherche] = useState('');
+  const [evenements,  setEvenements]  = useState([]);
+  const [chargement, setChargement]  = useState(true);
+  const [erreur,     setErreur]      = useState(null);
+  const [recherche,  setRecherche]   = useState('');
 
   const charger = async () => {
     setChargement(true);
@@ -34,31 +34,34 @@ const App = () => {
     ev.titre.toLowerCase().includes(recherche.toLowerCase())
   );
 
+  useEffect(() => {
+    if (evenementsFiltres.length > 0) {
+      document.title = `(${evenementsFiltres.length}) SenEvent`;
+    } else {
+      document.title = 'SenEvent';
+    }
+  }, [evenementsFiltres.length]);
+
   return (
     <div className={styles.container}>
-      <h1 className={styles.titre}>SenEvent — Événements à Dakar</h1>
-
+      <h1 className={styles.titre}>SenEvent — Evenements a Dakar</h1>
       {chargement && (
-        <p className={styles.message}>Chargement des événements...</p>
+        <p className={styles.message}>Chargement des evenements...</p>
       )}
-
       {erreur && (
         <div className={styles.erreur}>
           <p>Erreur : {erreur}</p>
-          <button className={styles.bouton} onClick={charger}>
-            Réessayer
-          </button>
+          <button className={styles.bouton} onClick={charger}>Reessayer</button>
         </div>
       )}
-
       {!chargement && !erreur && (
         <>
           <SearchBar recherche={recherche} onRecherche={setRecherche} />
           <p className={styles.compteur}>
-            {evenementsFiltres.length} événement(s) trouvé(s)
+            {evenementsFiltres.length} evenement(s) trouve(s)
           </p>
           {evenementsFiltres.length === 0 ? (
-            <p className={styles.message}>Aucun événement ne correspond.</p>
+            <p className={styles.message}>Aucun evenement ne correspond.</p>
           ) : (
             evenementsFiltres.map(ev => (
               <EvenementCarte key={ev.id} ev={ev} afficherDetails={true} />
@@ -71,3 +74,4 @@ const App = () => {
 };
 
 export default App;
+

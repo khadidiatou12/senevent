@@ -1,14 +1,14 @@
-import styles from "./SearchBar.module.css";
+import styles from './SearchBar.module.css';
 
-const SearchBar = ({ valeur, onChangement }) => {
+const SearchBar = ({ recherche, onRecherche }) => {
   return (
-    <div className={styles.searchWrapper}>
+    <div className={styles.conteneur}>
       <input
+        className={styles.input}
         type="text"
-        className={styles.searchInput}
-        placeholder="Rechercher un événement par son titre..."
-        value={valeur}
-        onChange={(e) => onChangement(e.target.value)}
+        placeholder="Rechercher un evenement..."
+        value={recherche}
+        onChange={e => onRecherche(e.target.value)}
       />
     </div>
   );
