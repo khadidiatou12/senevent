@@ -1,24 +1,33 @@
-import { useState, useEffect } from 'react';
-import EvenementCarte from './components/EvenementCarte';
-import SearchBar from './components/SearchBar';
-import styles from './App.module.css';
+import { useState, useEffect } from "react";
+import EvenementCarte from "./components/EvenementCarte";
+import SearchBar from "./components/SearchBar";
+import EtatChargement from "./components/EtatChargement";
+import styles from "./App.module.css";
 
 const App = () => {
   const [evenements, setEvenements] = useState([]);
   const [chargement, setChargement] = useState(true);
-  const [recherche, setRecherche] = useState('');
+  const [erreur, setErreur] = useState(null);
+  const [recherche, setRecherche] = useState("");
+
+  const charger = async () => {
+    setChargement(true);
+    setErreur(null);
+    try {
+      const reponse = await fetch("/événements.json");
+      if (!reponse.ok) {
+        throw new Error(`Erreur HTTP ${reponse.status}`);
+      }
+      const data = await reponse.json();
+      setEvenements(data);
+    } catch (e) {
+      setErreur(e.message);
+    } finally {
+      setChargement(false);
+    }
+  };
 
   useEffect(() => {
-    const charger = async () => {
-      try {
-        const reponse = await fetch('/evenements.json');
-        const data = await reponse.json();
-        setEvenements(data);
-      } catch (error) {
-        console.error('Erreur :', error);
-      }
-      setChargement(false);
-    };
     charger();
   }, []);
 
@@ -26,16 +35,37 @@ const App = () => {
     ev.titre.toLowerCase().includes(recherche.toLowerCase())
   );
 
+  useEffect(() => {
+    if (evenementsFiltres.length > 0) {
+      document.title = `(${evenementsFiltres.length}) SenEvent`;
+    } else {
+      document.title = "SenEvent";
+    }
+  }, [evenementsFiltres.length]);
+
   return (
     <div className={styles.container}>
-      <h1 className={styles.titre}>SenEvent — Événements à Dakar</h1>
-      <SearchBar recherche={recherche} onRecherche={setRecherche} />
-      <p className={styles.compteur}>
-        {evenementsFiltres.length} événement(s) trouvé(s)
-      </p>
-      {evenementsFiltres.map(ev => (
-        <EvenementCarte key={ev.id} ev={ev} afficherDetails={true} />
-      ))}
+      <h1 className={styles.titre}>SenEvent --- Evenements a Dakar</h1>
+      <EtatChargement
+        chargement={chargement}
+        erreur={erreur}
+        onReessayer={charger}
+      />
+      {!chargement && !erreur && (
+        <>
+          <SearchBar recherche={recherche} onRecherche={setRecherche} />
+          <p className={styles.compteur}>
+            {evenementsFiltres.length} evenement(s) trouve(s)
+          </p>
+          {evenementsFiltres.length === 0 ? (
+            <p className={styles.message}>Aucun evenement ne correspond.</p>
+          ) : (
+            evenementsFiltres.map(ev => (
+              <EvenementCarte key={ev.id} ev={ev} afficherDetails={true} />
+            ))
+          )}
+        </>
+      )}
     </div>
   );
 };
