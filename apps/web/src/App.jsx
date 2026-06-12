@@ -14,8 +14,7 @@ const App = () => {
     setChargement(true);
     setErreur(null);
     try {
-      const reponse = await fetch("/evenements.json");
-      //const reponse = await fetch("/evenements-faux.json");
+      const reponse = await fetch("/événements.json");
       if (!reponse.ok) {
         throw new Error(`Erreur HTTP ${reponse.status}`);
       }
@@ -29,7 +28,6 @@ const App = () => {
   };
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     charger();
   }, []);
 
@@ -47,14 +45,12 @@ const App = () => {
 
   return (
     <div className={styles.container}>
-      <h1 className={styles.titre}>SenEvent — Evenements a Dakar</h1>
-
+      <h1 className={styles.titre}>SenEvent --- Evenements a Dakar</h1>
       <EtatChargement
         chargement={chargement}
         erreur={erreur}
         onReessayer={charger}
       />
-
       {!chargement && !erreur && (
         <>
           <SearchBar recherche={recherche} onRecherche={setRecherche} />
@@ -62,9 +58,7 @@ const App = () => {
             {evenementsFiltres.length} evenement(s) trouve(s)
           </p>
           {evenementsFiltres.length === 0 ? (
-            <p className={styles.messageVide}>
-              Aucun evenement ne correspond.
-            </p>
+            <p className={styles.message}>Aucun evenement ne correspond.</p>
           ) : (
             evenementsFiltres.map(ev => (
               <EvenementCarte key={ev.id} ev={ev} afficherDetails={true} />
