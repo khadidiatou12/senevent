@@ -14,7 +14,8 @@ const App = () => {
     setChargement(true);
     setErreur(null);
     try {
-      const reponse = await fetch("/événements.json");
+      
+      const reponse = await fetch("/evenements.json");
       if (!reponse.ok) {
         throw new Error(`Erreur HTTP ${reponse.status}`);
       }
