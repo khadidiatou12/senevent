@@ -1,28 +1,41 @@
 import { NavLink } from "react-router-dom";
+import { supabase } from "../lib/supabase";
 import styles from "./NavBar.module.css";
 
-const NavBar = () => {
+const NavBar = ({ session }) => {
+  const lienActif = ({ isActive }) =>
+    isActive ? `${styles.lien} ${styles.actif}` : styles.lien;
+
+  const seDeconnecter = async () => {
+    await supabase.auth.signOut();
+  };
+
   return (
     <nav className={styles.navbar}>
       <div className={styles.logo}>SenEvent</div>
       <div className={styles.liens}>
-        <NavLink
-          to="/"
-          className={({ isActive }) =>
-            isActive ? `${styles.lien} ${styles.actif}` : styles.lien
-          }
-          end
-        >
+        <NavLink to="/" end className={lienActif}>
           Accueil
         </NavLink>
-        <NavLink
-          to="/nouveau"
-          className={({ isActive }) =>
-            isActive ? `${styles.lien} ${styles.actif}` : styles.lien
-          }
-        >
-          + Ajouter
-        </NavLink>
+
+        {session && (
+          <NavLink to="/nouveau" className={lienActif}>
+            + Ajouter
+          </NavLink>
+        )}
+
+        {session ? (
+          <>
+            <span className={styles.email}>{session.user.email}</span>
+            <button onClick={seDeconnecter} className={styles.deconnexion}>
+              Se deconnecter
+            </button>
+          </>
+        ) : (
+          <NavLink to="/auth" className={lienActif}>
+            Se connecter
+          </NavLink>
+        )}
       </div>
     </nav>
   );

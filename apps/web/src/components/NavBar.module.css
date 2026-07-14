@@ -37,3 +37,21 @@
   color: white;
   background: rgba(255, 255, 255, 0.2);
 }
+.email {
+  color: #a8c5e0;
+  font-size: 0.9rem;
+}
+
+.deconnexion {
+  background: transparent;
+  border: 1px solid #ea7d2b;
+  color: #ea7d2b;
+  padding: 0.3rem 0.8rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.deconnexion:hover {
+  background: #ea7d2b;
+  color: white;
+}
