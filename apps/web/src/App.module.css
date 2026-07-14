@@ -6,8 +6,10 @@
 }
 
 .titre {
-  color: #1a3a5c;
-  margin-bottom: 1rem;
+  text-align: center;
+  line-height: 1.2;
+  margin-bottom: 1.5rem;
+  padding: 0 1rem;
 }
 
 .bouton {
