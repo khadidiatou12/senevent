@@ -1,13 +1,16 @@
 import { useState } from "react";
+import { supabase } from "../lib/supabase";
 import styles from "./NouvelEvenement.module.css";
 
-function NouvelEvenement({ onAjout }) {
+function NouvelEvenement({ onAjoutReussi }) {
   const [titre, setTitre] = useState("");
   const [categorie, setCategorie] = useState("concert");
   const [lieuNom, setLieuNom] = useState("");
   const [dateDebut, setDateDebut] = useState("");
   const [prix, setPrix] = useState("");
   const [erreurs, setErreurs] = useState({});
+  const [erreurServeur, setErreurServeur] = useState(null);
+  const [enCours, setEnCours] = useState(false);
 
   const valider = () => {
     const e = {};
@@ -26,37 +29,50 @@ function NouvelEvenement({ onAjout }) {
     return e;
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
+    setErreurServeur(null);
 
     const e = valider();
     setErreurs(e);
     if (Object.keys(e).length > 0) return;
 
-    const nouvelEvenement = {
-      id: Date.now(),
+    setEnCours(true);
+
+    // Recuperer l'utilisateur connecte
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+      setErreurServeur("Vous devez être connecté pour créer un événement.");
+      setEnCours(false);
+      return;
+    }
+
+    // INSERT dans Supabase
+    const { error } = await supabase.from("evenements").insert({
       titre: titre.trim(),
       categorie,
       lieu_nom: lieuNom.trim(),
       date_debut: dateDebut,
       prix: Number(prix),
       image_url: "https://placehold.co/400x250/1a3a5c/fff?text=Nouveau",
-    };
+      organisateur_id: user.id,
+    });
 
-    onAjout(nouvelEvenement);
+    setEnCours(false);
 
-    setTitre("");
-    setCategorie("concert");
-    setLieuNom("");
-    setDateDebut("");
-    setPrix("");
-    setErreurs({});
+    if (error) {
+      setErreurServeur(error.message);
+    } else {
+      onAjoutReussi(); // demande a App de recharger la liste
+    }
   };
 
   return (
     <form onSubmit={handleSubmit} className={styles.formulaire}>
       <h2 className={styles.titre}>Nouvel événement</h2>
-
       <div className={styles.champ}>
         <label className={styles.label}>Titre</label>
         <input
@@ -67,7 +83,6 @@ function NouvelEvenement({ onAjout }) {
         />
         {erreurs.titre && <p className={styles.erreur}>{erreurs.titre}</p>}
       </div>
-
       <div className={styles.champ}>
         <label className={styles.label}>Catégorie</label>
         <select
@@ -81,7 +96,6 @@ function NouvelEvenement({ onAjout }) {
           <option value="sport">Sport</option>
         </select>
       </div>
-
       <div className={styles.champ}>
         <label className={styles.label}>Lieu</label>
         <input
@@ -92,7 +106,6 @@ function NouvelEvenement({ onAjout }) {
         />
         {erreurs.lieuNom && <p className={styles.erreur}>{erreurs.lieuNom}</p>}
       </div>
-
       <div className={styles.champ}>
         <label className={styles.label}>Date de début</label>
         <input
@@ -105,7 +118,6 @@ function NouvelEvenement({ onAjout }) {
           <p className={styles.erreur}>{erreurs.dateDebut}</p>
         )}
       </div>
-
       <div className={styles.champ}>
         <label className={styles.label}>Prix (FCFA)</label>
         <input
@@ -117,8 +129,12 @@ function NouvelEvenement({ onAjout }) {
         {erreurs.prix && <p className={styles.erreur}>{erreurs.prix}</p>}
       </div>
 
-      <button type="submit" className={styles.bouton}>
-        Ajouter l'événement
+      {erreurServeur && (
+        <p className={styles.erreur}>Erreur : {erreurServeur}</p>
+      )}
+
+      <button type="submit" disabled={enCours} className={styles.bouton}>
+        {enCours ? "Envoi..." : "Ajouter l'événement"}
       </button>
     </form>
   );

@@ -53,10 +53,7 @@ const App = () => {
     charger();
   }, []);
 
-  const ajouterEvenement = (nouvelEvenement) => {
-    setEvenements([...evenements, nouvelEvenement]);
-  };
-
+ 
   return (
     <div className={styles.container}>
       <NavBar session={session} />
@@ -76,7 +73,7 @@ const App = () => {
         />
         <Route
           path="/nouveau"
-          element={<PageNouveau onAjout={ajouterEvenement} />}
+          element={<PageNouveau onAjoutReussi={charger} />}
         />
         <Route
           path="/evenement/:id"
