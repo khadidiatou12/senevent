@@ -74,6 +74,11 @@ const PageDetail = ({ evenements, session }) => {
         <strong>Date :</strong>{" "}
         {new Date(evenement.date_debut).toLocaleString("fr-FR")}
       </p>
+      <p>
+        <strong>Organisé par :</strong>{" "}
+        {evenement.profiles ? evenement.profiles.nom : "Équipe SenEvent"}
+      </p>
+      
       <p style={{ color: "#e67e22", fontWeight: "bold", fontSize: "1.3rem" }}>
         {evenement.prix === 0 ? "Gratuit" : `${evenement.prix} FCFA`}
       </p>

@@ -39,7 +39,7 @@ const App = () => {
     setErreur(null);
     const { data, error } = await supabase
       .from("evenements")
-      .select("*")
+      .select("*, profiles(nom)")
       .order("date_debut", { ascending: true });
     if (error) {
       setErreur(error.message);
@@ -79,7 +79,7 @@ const App = () => {
           path="/evenement/:id"
           element={<PageDetail evenements={evenements} session={session} />}
         />
-        
+
         <Route path="/auth" element={<Auth />} />
       </Routes>
     </div>
