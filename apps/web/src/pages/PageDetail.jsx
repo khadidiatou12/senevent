@@ -1,10 +1,10 @@
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
+import { supabase } from "../lib/supabase";
 import BoutonInscription from "../components/BoutonInscription";
 
 const PageDetail = ({ evenements, session }) => {
   const { id } = useParams();
-
-  
+  const navigate = useNavigate();
 
   const evenement = evenements.find((ev) => String(ev.id) === id);
 
@@ -18,6 +18,22 @@ const PageDetail = ({ evenements, session }) => {
       </div>
     );
   }
+
+  const supprimer = async () => {
+    const confirme = window.confirm("Supprimer cet événement ?");
+    if (!confirme) return;
+
+    const { error } = await supabase
+      .from("evenements")
+      .delete()
+      .eq("id", evenement.id);
+
+    if (error) {
+      alert("Erreur : " + error.message);
+    } else {
+      navigate("/");
+    }
+  };
 
   return (
     <div
@@ -61,8 +77,28 @@ const PageDetail = ({ evenements, session }) => {
       <p style={{ color: "#e67e22", fontWeight: "bold", fontSize: "1.3rem" }}>
         {evenement.prix === 0 ? "Gratuit" : `${evenement.prix} FCFA`}
       </p>
+
       <BoutonInscription evenementId={evenement.id} session={session} />
 
+      {session && session.user.id === evenement.organisateur_id && (
+        <button
+          onClick={supprimer}
+          style={{
+            display: "block",
+            margin: "16px auto",
+            padding: "12px 24px",
+            backgroundColor: "#dc2626",
+            color: "white",
+            border: "none",
+            borderRadius: "8px",
+            fontSize: "1rem",
+            fontWeight: "bold",
+            cursor: "pointer",
+          }}
+        >
+          Supprimer cet événement
+        </button>
+      )}
     </div>
   );
 };
