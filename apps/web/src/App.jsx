@@ -32,31 +32,28 @@ const App = () => {
     return () => subscription.subscription.unsubscribe();
   }, []);
 
+  
+
   const charger = async () => {
     setChargement(true);
     setErreur(null);
-    try {
-      const reponse = await fetch("/evenements.json");
-      if (!reponse.ok) {
-        throw new Error(`Erreur HTTP ${reponse.status}`);
-      }
-      const data = await reponse.json();
+    const { data, error } = await supabase
+      .from("evenements")
+      .select("*, profiles(nom)")
+      .order("date_debut", { ascending: true });
+    if (error) {
+      setErreur(error.message);
+    } else {
       setEvenements(data);
-    } catch (e) {
-      setErreur(e.message);
-    } finally {
-      setChargement(false);
     }
+    setChargement(false);
   };
 
   useEffect(() => {
     charger();
   }, []);
 
-  const ajouterEvenement = (nouvelEvenement) => {
-    setEvenements([...evenements, nouvelEvenement]);
-  };
-
+ 
   return (
     <div className={styles.container}>
       <NavBar session={session} />
@@ -76,12 +73,13 @@ const App = () => {
         />
         <Route
           path="/nouveau"
-          element={<PageNouveau onAjout={ajouterEvenement} />}
+          element={<PageNouveau onAjoutReussi={charger} />}
         />
         <Route
           path="/evenement/:id"
-          element={<PageDetail evenements={evenements} />}
+          element={<PageDetail evenements={evenements} session={session} />}
         />
+
         <Route path="/auth" element={<Auth />} />
       </Routes>
     </div>

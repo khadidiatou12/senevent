@@ -1,0 +1,40 @@
+.inscrire {
+  display: block;
+  margin: 16px auto;
+  padding: 12px 24px;
+  background-color: #16a34a;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.inscrire:hover {
+  background-color: #15803d;
+}
+
+.desinscrire {
+  display: block;
+  margin: 16px auto;
+  padding: 12px 24px;
+  background-color: #ea580c;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.desinscrire:hover {
+  background-color: #c2410c;
+}
+
+.info {
+  text-align: center;
+  color: #6b7280;
+  font-style: italic;
+  margin: 16px 0;
+}
