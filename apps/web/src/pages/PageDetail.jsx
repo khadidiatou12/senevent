@@ -1,7 +1,10 @@
 import { useParams, Link } from "react-router-dom";
+import BoutonInscription from "../components/BoutonInscription";
 
-const PageDetail = ({ evenements }) => {
+const PageDetail = ({ evenements, session }) => {
   const { id } = useParams();
+
+  
 
   const evenement = evenements.find((ev) => String(ev.id) === id);
 
@@ -58,6 +61,8 @@ const PageDetail = ({ evenements }) => {
       <p style={{ color: "#e67e22", fontWeight: "bold", fontSize: "1.3rem" }}>
         {evenement.prix === 0 ? "Gratuit" : `${evenement.prix} FCFA`}
       </p>
+      <BoutonInscription evenementId={evenement.id} session={session} />
+
     </div>
   );
 };

@@ -77,8 +77,9 @@ const App = () => {
         />
         <Route
           path="/evenement/:id"
-          element={<PageDetail evenements={evenements} />}
+          element={<PageDetail evenements={evenements} session={session} />}
         />
+        
         <Route path="/auth" element={<Auth />} />
       </Routes>
     </div>
