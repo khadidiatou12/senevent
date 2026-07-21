@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { supabase } from "../lib/supabase";
+import { sInscrire, seConnecter, getSupabase } from "@senevent/shared";
 import { useNavigate } from "react-router-dom";
 import styles from "./Auth.module.css";
 
@@ -19,25 +19,17 @@ const Auth = () => {
 
     try {
       if (mode === "signup") {
-        const { data, error } = await supabase.auth.signUp({
-          email,
-          password: motDePasse,
-        });
-        if (error) throw error;
+        const data = await sInscrire(email, motDePasse);
 
         // Creer la ligne profile associee
         if (data.user) {
-          const { error: e2 } = await supabase
+          const { error: e2 } = await getSupabase()
             .from("profiles")
             .insert({ id: data.user.id, nom, role: "PUBLIC" });
           if (e2) throw e2;
         }
       } else {
-        const { error } = await supabase.auth.signInWithPassword({
-          email,
-          password: motDePasse,
-        });
-        if (error) throw error;
+        await seConnecter(email, motDePasse);
       }
       navigate("/");
     } catch (e) {

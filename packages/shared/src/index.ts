@@ -1,5 +1,5 @@
 // Types
-export * from "./types";
+export type * from "./types";
 
 // Client
 export { initSupabase, getSupabase } from "./supabaseClient";

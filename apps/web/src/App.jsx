@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
-import { supabase } from "./lib/supabase";
+import { getEvenements, getSupabase } from "@senevent/shared";
 import Accueil from "./pages/Accueil";
 import PageNouveau from "./pages/PageNouveau";
 import PageDetail from "./pages/PageDetail";
@@ -16,49 +16,40 @@ const App = () => {
 
   // Gestion de la session Supabase
   useEffect(() => {
-    // 1. Recuperer la session actuelle au montage
-    supabase.auth.getSession().then(({ data }) => {
+    getSupabase().auth.getSession().then(({ data }) => {
       setSession(data.session);
     });
 
-    // 2. Ecouter tout changement de session (login, logout, refresh)
-    const { data: subscription } = supabase.auth.onAuthStateChange(
+    const { data: subscription } = getSupabase().auth.onAuthStateChange(
       (_event, newSession) => {
         setSession(newSession);
       }
     );
 
-    // 3. Nettoyage : desabonner l'ecouteur au demontage
     return () => subscription.subscription.unsubscribe();
   }, []);
-
-  
 
   const charger = async () => {
     setChargement(true);
     setErreur(null);
-    const { data, error } = await supabase
-      .from("evenements")
-      .select("*, profiles(nom)")
-      .order("date_debut", { ascending: true });
-    if (error) {
-      setErreur(error.message);
-    } else {
+    try {
+      const data = await getEvenements();
       setEvenements(data);
+    } catch (e) {
+      setErreur(e.message);
+    } finally {
+      setChargement(false);
     }
-    setChargement(false);
   };
 
   useEffect(() => {
     charger();
   }, []);
 
- 
   return (
     <div className={styles.container}>
       <NavBar session={session} />
       <h1 className={styles.titre}>SenEvent --- Evenements a Dakar</h1>
-
       <Routes>
         <Route
           path="/"
@@ -79,7 +70,6 @@ const App = () => {
           path="/evenement/:id"
           element={<PageDetail evenements={evenements} session={session} />}
         />
-
         <Route path="/auth" element={<Auth />} />
       </Routes>
     </div>
