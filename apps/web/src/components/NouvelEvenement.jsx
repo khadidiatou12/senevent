@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { supabase } from "../lib/supabase";
+import { creerEvenement, getSupabase } from "@senevent/shared";
 import styles from "./NouvelEvenement.module.css";
 
 function NouvelEvenement({ onAjoutReussi }) {
@@ -42,7 +42,7 @@ function NouvelEvenement({ onAjoutReussi }) {
     // Recuperer l'utilisateur connecte
     const {
       data: { user },
-    } = await supabase.auth.getUser();
+    } = await getSupabase().auth.getUser();
 
     if (!user) {
       setErreurServeur("Vous devez être connecté pour créer un événement.");
@@ -50,23 +50,21 @@ function NouvelEvenement({ onAjoutReussi }) {
       return;
     }
 
-    // INSERT dans Supabase
-    const { error } = await supabase.from("evenements").insert({
-      titre: titre.trim(),
-      categorie,
-      lieu_nom: lieuNom.trim(),
-      date_debut: dateDebut,
-      prix: Number(prix),
-      image_url: "https://placehold.co/400x250/1a3a5c/fff?text=Nouveau",
-      organisateur_id: user.id,
-    });
-
-    setEnCours(false);
-
-    if (error) {
-      setErreurServeur(error.message);
-    } else {
+    try {
+      await creerEvenement({
+        titre: titre.trim(),
+        categorie,
+        lieu_nom: lieuNom.trim(),
+        date_debut: dateDebut,
+        prix: Number(prix),
+        image_url: "https://placehold.co/400x250/1a3a5c/fff?text=Nouveau",
+        organisateur_id: user.id,
+      });
       onAjoutReussi(); // demande a App de recharger la liste
+    } catch (err) {
+      setErreurServeur(err.message);
+    } finally {
+      setEnCours(false);
     }
   };
 
