@@ -1,12 +1,19 @@
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
+import { initSupabase } from "@senevent/shared";
+
+// Initialiser Supabase avec les variables d'environnement d'Expo
+initSupabase(
+  process.env.EXPO_PUBLIC_SUPABASE_URL,
+  process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY
+);
 
 export default function App() {
   return (
     <View style={styles.container}>
       <Text style={styles.titre}>SenEvent Mobile</Text>
       <Text style={styles.sousTitre}>Evenements a Dakar</Text>
-      <Text style={styles.auteur}>Realisé par Khadidiatou Diallo</Text>
+      <Text style={styles.auteur}>Réalisé par Khadidiatou Diallo</Text>
       <StatusBar style="auto" />
     </View>
   );
