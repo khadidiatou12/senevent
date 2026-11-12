@@ -16,4 +16,19 @@ config.resolver.nodeModulesPaths = [
   path.resolve(monorepoRoot, "node_modules"),
 ];
 
+// 3. Une seule copie de React : expo-router (hisse a la racine) doit
+//    utiliser le meme React que nos ecrans, sinon "Invalid hook call".
+const UNIQUES = ["react", "react-dom"];
+config.resolver.resolveRequest = (context, moduleName, platform) => {
+  const racine = moduleName.split("/")[0];
+  if (UNIQUES.includes(racine)) {
+    return context.resolveRequest(
+      { ...context, originModulePath: path.join(projectRoot, "package.json") },
+      moduleName,
+      platform
+    );
+  }
+  return context.resolveRequest(context, moduleName, platform);
+};
+
 module.exports = config;
