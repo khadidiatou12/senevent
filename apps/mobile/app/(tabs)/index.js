@@ -1,7 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState, useCallback } from "react";
 import {
   StyleSheet, Text, View, FlatList, ActivityIndicator,
 } from "react-native";
+import { useFocusEffect } from "expo-router";
 import { getEvenements } from "@senevent/shared";
 import EvenementCarte from "../../components/EvenementCarte";
 
@@ -10,24 +11,25 @@ export default function Evenements() {
   const [chargement, setChargement] = useState(true);
   const [erreur, setErreur] = useState(null);
 
-  useEffect(() => {
-    const charger = async () => {
-      try {
-        const data = await getEvenements();
-        setEvenements(data);
-      } catch (e) {
-        setErreur(e.message);
-      } finally {
-        setChargement(false);
-      }
-    };
-    charger();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      const charger = async () => {
+        try {
+          const data = await getEvenements();
+          setEvenements(data);
+        } catch (e) {
+          setErreur(e.message);
+        } finally {
+          setChargement(false);
+        }
+      };
+      charger();
+    }, [])
+  );
 
   if (chargement) {
     return (
-      <ActivityIndicator size="large" color="#1a3a5c"
-        style={styles.centre} />
+      <ActivityIndicator size="large" color="#1a3a5c" style={styles.centre} />
     );
   }
 
