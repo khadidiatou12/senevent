@@ -4,6 +4,7 @@ import {
 } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { getEvenements } from "@senevent/shared";
+import BoutonInscription from "../../components/BoutonInscription";
 
 export default function Detail() {
   const { id } = useLocalSearchParams();
@@ -23,8 +24,7 @@ export default function Detail() {
 
   if (chargement) {
     return (
-      <ActivityIndicator size="large" color="#1a3a5c"
-        style={styles.centre} />
+      <ActivityIndicator size="large" color="#1a3a5c" style={styles.centre} />
     );
   }
 
@@ -32,9 +32,7 @@ export default function Detail() {
     return <Text style={styles.centre}>Evenement introuvable.</Text>;
   }
 
-  const prix = evenement.prix === 0
-    ? "Gratuit"
-    : `${evenement.prix} FCFA`;
+  const prix = evenement.prix === 0 ? "Gratuit" : `${evenement.prix} FCFA`;
   const date = new Date(evenement.date_debut).toLocaleString("fr-FR");
 
   return (
@@ -59,10 +57,9 @@ export default function Detail() {
           <Text style={styles.prix}>{prix}</Text>
         </View>
 
-        <Pressable
-          style={styles.bouton}
-          onPress={() => router.push("/")}
-        >
+        <BoutonInscription evenementId={evenement.id} />
+
+        <Pressable style={styles.bouton} onPress={() => router.push("/")}>
           <Text style={styles.boutonTexte}>Retour a la liste</Text>
         </Pressable>
       </View>
