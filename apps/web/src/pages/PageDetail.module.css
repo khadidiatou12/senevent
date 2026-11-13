@@ -1,0 +1,114 @@
+.carte {
+  max-width: 600px;
+  margin: 2rem auto;
+  background: #fff;
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 4px 20px rgba(26, 58, 92, 0.1);
+}
+
+.retour {
+  color: #1a3a5c;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.95rem;
+  display: inline-block;
+  margin-bottom: 1rem;
+}
+
+.retour:hover {
+  text-decoration: underline;
+}
+
+.image {
+  width: 100%;
+  border-radius: 12px;
+  margin-bottom: 1.2rem;
+}
+
+.badge {
+  display: inline-block;
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  padding: 0.3rem 0.8rem;
+  border-radius: 999px;
+}
+
+.titre {
+  color: #1a3a5c;
+  font-size: 1.8rem;
+  font-weight: 800;
+  margin: 0.8rem 0 1.2rem;
+  line-height: 1.25;
+}
+
+.infos {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  margin-bottom: 1.3rem;
+}
+
+.ligne {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin: 0;
+  color: #44546a;
+  font-size: 1rem;
+}
+
+.icone {
+  font-size: 1.15rem;
+}
+
+.prix {
+  color: #ea7d2b;
+  font-weight: 800;
+  font-size: 1.6rem;
+  margin: 0 0 0.5rem;
+}
+
+.prixGratuit {
+  color: #16a34a;
+  font-weight: 800;
+  font-size: 1.6rem;
+  margin: 0 0 0.5rem;
+}
+
+.supprimer {
+  display: block;
+  width: 100%;
+  margin-top: 1rem;
+  padding: 0.85rem;
+  background-color: #dc2626;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.supprimer:hover {
+  background-color: #b91c1c;
+}
+
+.introuvable {
+  text-align: center;
+  padding: 3rem 1rem;
+}
+
+.introuvableIcone {
+  font-size: 3rem;
+  opacity: 0.5;
+}
+
+.retourLien {
+  color: #1a3a5c;
+  font-weight: 600;
+}

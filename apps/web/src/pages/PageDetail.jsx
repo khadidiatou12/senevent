@@ -1,6 +1,16 @@
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { supprimerEvenement } from "@senevent/shared";
 import BoutonInscription from "../components/BoutonInscription";
+import styles from "./PageDetail.module.css";
+
+const COULEURS = {
+  concert: "#7c3aed",
+  expo: "#db2777",
+  conference: "#2563eb",
+  atelier: "#ea580c",
+  soutenance: "#0891b2",
+  sport: "#16a34a",
+};
 
 const PageDetail = ({ evenements, session }) => {
   const { id } = useParams();
@@ -10,19 +20,17 @@ const PageDetail = ({ evenements, session }) => {
 
   if (!evenement) {
     return (
-      <div style={{ textAlign: "center", padding: "2rem" }}>
-        <p>Événement introuvable.</p>
-        <Link to="/" style={{ color: "#1a3a5c" }}>
-          ← Retour à l'accueil
-        </Link>
+      <div className={styles.introuvable}>
+        <div className={styles.introuvableIcone}>🔎</div>
+        <p>Evenement introuvable.</p>
+        <Link to="/" className={styles.retourLien}>← Retour a l'accueil</Link>
       </div>
     );
   }
 
   const supprimer = async () => {
-    const confirme = window.confirm("Supprimer cet événement ?");
+    const confirme = window.confirm("Supprimer cet evenement ?");
     if (!confirme) return;
-
     try {
       await supprimerEvenement(evenement.id);
       navigate("/");
@@ -31,73 +39,45 @@ const PageDetail = ({ evenements, session }) => {
     }
   };
 
+  const estGratuit = evenement.prix === 0;
+  const couleur = COULEURS[evenement.categorie] || "#64748b";
+  const date = new Date(evenement.date_debut).toLocaleString("fr-FR", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+
   return (
-    <div
-      style={{
-        maxWidth: "600px",
-        margin: "2rem auto",
-        background: "white",
-        borderRadius: "12px",
-        padding: "2rem",
-        boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
-      }}
-    >
-      <Link
-        to="/"
-        style={{
-          color: "#1a3a5c",
-          textDecoration: "none",
-          fontWeight: "600",
-        }}
-      >
-        ← Retour
-      </Link>
+    <div className={styles.carte}>
+      <Link to="/" className={styles.retour}>← Retour</Link>
 
-      <img
-        src={evenement.image_url}
-        alt={evenement.titre}
-        style={{
-          width: "100%",
-          borderRadius: "8px",
-          margin: "1rem 0",
-        }}
-      />
+      {evenement.image_url && (
+        <img src={evenement.image_url} alt={evenement.titre} className={styles.image} />
+      )}
 
-      <h1 style={{ color: "#1a3a5c" }}>{evenement.titre}</h1>
-      <p><strong>Catégorie :</strong> {evenement.categorie}</p>
-      <p><strong>Lieu :</strong> {evenement.lieu_nom}</p>
-      <p>
-        <strong>Date :</strong>{" "}
-        {new Date(evenement.date_debut).toLocaleString("fr-FR")}
-      </p>
-      <p>
-        <strong>Organisé par :</strong>{" "}
-        {evenement.profiles ? evenement.profiles.nom : "Équipe SenEvent"}
-      </p>
+      <span className={styles.badge} style={{ backgroundColor: couleur }}>
+        {evenement.categorie}
+      </span>
 
-      <p style={{ color: "#e67e22", fontWeight: "bold", fontSize: "1.3rem" }}>
-        {evenement.prix === 0 ? "Gratuit" : `${evenement.prix} FCFA`}
+      <h1 className={styles.titre}>{evenement.titre}</h1>
+
+      <div className={styles.infos}>
+        <p className={styles.ligne}><span className={styles.icone}>📍</span><span>{evenement.lieu_nom}</span></p>
+        <p className={styles.ligne}><span className={styles.icone}>🗓️</span><span>{date}</span></p>
+        <p className={styles.ligne}><span className={styles.icone}>👤</span><span>{evenement.profiles ? evenement.profiles.nom : "Equipe SenEvent"}</span></p>
+      </div>
+
+      <p className={estGratuit ? styles.prixGratuit : styles.prix}>
+        {estGratuit ? "Gratuit" : `${evenement.prix} FCFA`}
       </p>
 
       <BoutonInscription evenementId={evenement.id} session={session} />
 
       {session && session.user.id === evenement.organisateur_id && (
-        <button
-          onClick={supprimer}
-          style={{
-            display: "block",
-            margin: "16px auto",
-            padding: "12px 24px",
-            backgroundColor: "#dc2626",
-            color: "white",
-            border: "none",
-            borderRadius: "8px",
-            fontSize: "1rem",
-            fontWeight: "bold",
-            cursor: "pointer",
-          }}
-        >
-          Supprimer cet événement
+        <button onClick={supprimer} className={styles.supprimer}>
+          Supprimer cet evenement
         </button>
       )}
     </div>
