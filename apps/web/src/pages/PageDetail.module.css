@@ -20,14 +20,25 @@
   text-decoration: underline;
 }
 
+.imageBox {
+  position: relative;
+  width: 100%;
+  margin-bottom: 1.2rem;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
 .image {
   width: 100%;
-  border-radius: 12px;
-  margin-bottom: 1.2rem;
+  height: 260px;
+  object-fit: cover;
+  display: block;
 }
 
 .badge {
-  display: inline-block;
+  position: absolute;
+  top: 12px;
+  left: 12px;
   color: #fff;
   font-size: 0.75rem;
   font-weight: 700;
@@ -35,13 +46,14 @@
   letter-spacing: 0.03em;
   padding: 0.3rem 0.8rem;
   border-radius: 999px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
 .titre {
   color: #1a3a5c;
   font-size: 1.8rem;
   font-weight: 800;
-  margin: 0.8rem 0 1.2rem;
+  margin: 0.4rem 0 1.2rem;
   line-height: 1.25;
 }
 

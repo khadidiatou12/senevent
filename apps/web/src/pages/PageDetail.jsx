@@ -12,6 +12,19 @@ const COULEURS = {
   sport: "#16a34a",
 };
 
+const IMAGES_DEFAUT = {
+  concert:
+    "https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?w=900&q=80",
+  expo:
+    "https://images.unsplash.com/photo-1536924940846-227afb31e2a5?w=900&q=80",
+  conference:
+    "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=900&q=80",
+  atelier:
+    "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=900&q=80",
+  soutenance:
+    "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=900&q=80",
+};
+
 const PageDetail = ({ evenements, session }) => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -41,6 +54,10 @@ const PageDetail = ({ evenements, session }) => {
 
   const estGratuit = evenement.prix === 0;
   const couleur = COULEURS[evenement.categorie] || "#64748b";
+  const image =
+    evenement.image_url ||
+    IMAGES_DEFAUT[evenement.categorie] ||
+    IMAGES_DEFAUT.concert;
   const date = new Date(evenement.date_debut).toLocaleString("fr-FR", {
     weekday: "long",
     day: "numeric",
@@ -53,13 +70,12 @@ const PageDetail = ({ evenements, session }) => {
     <div className={styles.carte}>
       <Link to="/" className={styles.retour}>← Retour</Link>
 
-      {evenement.image_url && (
-        <img src={evenement.image_url} alt={evenement.titre} className={styles.image} />
-      )}
-
-      <span className={styles.badge} style={{ backgroundColor: couleur }}>
-        {evenement.categorie}
-      </span>
+      <div className={styles.imageBox}>
+        <img src={image} alt={evenement.titre} className={styles.image} />
+        <span className={styles.badge} style={{ backgroundColor: couleur }}>
+          {evenement.categorie}
+        </span>
+      </div>
 
       <h1 className={styles.titre}>{evenement.titre}</h1>
 
