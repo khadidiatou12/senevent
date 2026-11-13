@@ -1,6 +1,6 @@
 import { useState } from "react";
 import {
-  View, Text, TextInput, Pressable, StyleSheet, ScrollView,
+  View, Text, TextInput, Pressable, StyleSheet, ScrollView, Image,
   KeyboardAvoidingView, Platform,
 } from "react-native";
 import { useRouter } from "expo-router";
@@ -16,6 +16,7 @@ export default function Nouveau() {
   const [categorie, setCategorie] = useState("concert");
   const [lieu, setLieu] = useState("");
   const [prix, setPrix] = useState("");
+  const [imageUrl, setImageUrl] = useState("");
   const [erreur, setErreur] = useState(null);
   const [enCours, setEnCours] = useState(false);
 
@@ -37,9 +38,10 @@ export default function Nouveau() {
         lieu_nom: lieu.trim(),
         date_debut: new Date().toISOString(),
         prix: Number(prix) || 0,
+        image_url: imageUrl.trim() || null,
         organisateur_id: session.user.id,
       });
-      router.back(); // retour a la liste
+      router.back();
     } catch (e) {
       setErreur(e.message);
     } finally {
@@ -82,6 +84,18 @@ export default function Nouveau() {
           keyboardType="numeric"
         />
 
+        <Text style={styles.label}>Image (lien) — optionnel</Text>
+        <TextInput
+          style={styles.input}
+          value={imageUrl}
+          onChangeText={setImageUrl}
+          placeholder="https://exemple.com/image.jpg"
+          autoCapitalize="none"
+        />
+        {imageUrl.trim() ? (
+          <Image source={{ uri: imageUrl.trim() }} style={styles.apercu} />
+        ) : null}
+
         {erreur && <Text style={styles.erreur}>{erreur}</Text>}
 
         <Pressable style={styles.bouton} onPress={soumettre} disabled={enCours}>
@@ -104,6 +118,9 @@ const styles = StyleSheet.create({
   input: {
     borderWidth: 1, borderColor: "#ccc", borderRadius: 8,
     padding: 12, fontSize: 16,
+  },
+  apercu: {
+    width: "100%", height: 160, borderRadius: 10, marginTop: 8,
   },
   categories: { flexDirection: "row", flexWrap: "wrap", gap: 8 },
   chip: {

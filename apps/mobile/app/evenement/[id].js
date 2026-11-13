@@ -6,6 +6,39 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import { getEvenements } from "@senevent/shared";
 import BoutonInscription from "../../components/BoutonInscription";
 
+const COULEURS = {
+  concert: "#7c3aed",
+  expo: "#db2777",
+  conference: "#2563eb",
+  atelier: "#ea580c",
+  soutenance: "#0891b2",
+  sport: "#16a34a",
+};
+
+const IMAGES_DEFAUT = {
+  concert:
+    "https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?w=900&q=80",
+  expo:
+    "https://images.unsplash.com/photo-1536924940846-227afb31e2a5?w=900&q=80",
+  conference:
+    "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=900&q=80",
+  atelier:
+    "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=900&q=80",
+  soutenance:
+    "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=900&q=80",
+};
+
+const formatDate = (iso) => {
+  if (!iso) return "";
+  return new Date(iso).toLocaleString("fr-FR", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+};
+
 export default function Detail() {
   const { id } = useLocalSearchParams();
   const router = useRouter();
@@ -32,30 +65,35 @@ export default function Detail() {
     return <Text style={styles.centre}>Evenement introuvable.</Text>;
   }
 
-  const prix = evenement.prix === 0 ? "Gratuit" : `${evenement.prix} FCFA`;
-  const date = new Date(evenement.date_debut).toLocaleString("fr-FR");
+  const estGratuit = evenement.prix === 0;
+  const prix = estGratuit ? "Gratuit" : `${evenement.prix} FCFA`;
+  const couleur = COULEURS[evenement.categorie] || "#64748b";
+  const image =
+    evenement.image_url ||
+    IMAGES_DEFAUT[evenement.categorie] ||
+    IMAGES_DEFAUT.concert;
 
   return (
     <ScrollView style={styles.container}>
-      {evenement.image_url && (
-        <Image source={{ uri: evenement.image_url }} style={styles.image} />
-      )}
+      <View style={styles.imageBox}>
+        <Image source={{ uri: image }} style={styles.image} />
+        <View style={[styles.badge, { backgroundColor: couleur }]}>
+          <Text style={styles.badgeTexte}>{evenement.categorie}</Text>
+        </View>
+      </View>
       <View style={styles.contenu}>
         <Text style={styles.titre}>{evenement.titre}</Text>
-        <Text style={styles.categorie}>{evenement.categorie}</Text>
 
         <View style={styles.ligne}>
-          <Text style={styles.label}>Lieu</Text>
-          <Text style={styles.valeur}>{evenement.lieu_nom}</Text>
+          <Text style={styles.infoTexte}>📍 {evenement.lieu_nom}</Text>
         </View>
         <View style={styles.ligne}>
-          <Text style={styles.label}>Date</Text>
-          <Text style={styles.valeur}>{date}</Text>
+          <Text style={styles.infoTexte}>🗓️ {formatDate(evenement.date_debut)}</Text>
         </View>
-        <View style={styles.ligne}>
-          <Text style={styles.label}>Prix</Text>
-          <Text style={styles.prix}>{prix}</Text>
-        </View>
+
+        <Text style={estGratuit ? styles.prixGratuit : styles.prix}>
+          {prix}
+        </Text>
 
         <BoutonInscription evenementId={evenement.id} />
 
@@ -69,31 +107,28 @@ export default function Detail() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#fff" },
-  image: { width: "100%", height: 200 },
-  contenu: { padding: 16 },
-  titre: { fontSize: 22, fontWeight: "bold", color: "#1a3a5c" },
-  categorie: {
-    alignSelf: "flex-start",
-    fontSize: 12,
+  imageBox: { position: "relative", width: "100%", height: 220 },
+  image: { width: "100%", height: 220 },
+  badge: {
+    position: "absolute",
+    top: 12,
+    left: 12,
+    paddingHorizontal: 12,
+    paddingVertical: 5,
+    borderRadius: 999,
+  },
+  badgeTexte: {
     color: "#fff",
-    backgroundColor: "#ea7d2b",
-    paddingHorizontal: 10,
-    paddingVertical: 3,
-    borderRadius: 12,
+    fontSize: 12,
+    fontWeight: "700",
     textTransform: "uppercase",
-    marginTop: 8,
   },
-  ligne: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginTop: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: "#eee",
-    paddingBottom: 8,
-  },
-  label: { fontSize: 14, color: "#888" },
-  valeur: { fontSize: 14, color: "#1a3a5c", fontWeight: "600" },
-  prix: { fontSize: 16, color: "#ea7d2b", fontWeight: "bold" },
+  contenu: { padding: 16 },
+  titre: { fontSize: 24, fontWeight: "bold", color: "#1a3a5c", marginBottom: 12 },
+  ligne: { marginTop: 10 },
+  infoTexte: { fontSize: 15, color: "#44546a" },
+  prix: { fontSize: 22, color: "#ea7d2b", fontWeight: "bold", marginTop: 16 },
+  prixGratuit: { fontSize: 22, color: "#16a34a", fontWeight: "bold", marginTop: 16 },
   centre: { textAlign: "center", marginTop: 40 },
   bouton: {
     backgroundColor: "#1a3a5c",
