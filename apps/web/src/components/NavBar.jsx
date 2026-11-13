@@ -22,6 +22,11 @@ const NavBar = ({ session }) => {
             + Ajouter
           </NavLink>
         )}
+        {session && (
+          <NavLink to="/mes-inscriptions" className={lienActif}>
+            Mes inscriptions
+          </NavLink>
+        )}
         {session ? (
           <>
             <span className={styles.email}>{session.user.email}</span>

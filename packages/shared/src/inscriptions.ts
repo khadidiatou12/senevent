@@ -1,4 +1,5 @@
 import { getSupabase } from "./supabaseClient";
+import type { Evenement } from "./types";
 
 export async function estInscrit(
   evenementId: number,
@@ -26,4 +27,17 @@ export async function desinscrire(evenementId: number, utilisateurId: string) {
     .eq("evenement_id", evenementId)
     .eq("utilisateur_id", utilisateurId);
   if (error) throw error;
+}
+
+export async function mesInscriptions(
+  utilisateurId: string
+): Promise<Evenement[]> {
+  const { data, error } = await getSupabase()
+    .from("inscriptions")
+    .select("evenements(*)")
+    .eq("utilisateur_id", utilisateurId);
+  if (error) throw error;
+  return (data ?? [])
+    .map((ligne: any) => ligne.evenements)
+    .filter((e: any) => e != null) as Evenement[];
 }

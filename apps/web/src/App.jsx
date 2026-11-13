@@ -4,6 +4,7 @@ import { getEvenements, getSupabase } from "@senevent/shared";
 import Accueil from "./pages/Accueil";
 import PageNouveau from "./pages/PageNouveau";
 import PageDetail from "./pages/PageDetail";
+import MesInscriptions from "./pages/MesInscriptions";
 import Auth from "./pages/Auth";
 import NavBar from "./components/NavBar";
 import styles from "./App.module.css";
@@ -68,6 +69,7 @@ const App = () => {
         />
         <Route path="/nouveau" element={<PageNouveau onAjoutReussi={charger} />} />
         <Route path="/evenement/:id" element={<PageDetail evenements={evenements} session={session} />} />
+        <Route path="/mes-inscriptions" element={<MesInscriptions session={session} />} />
         <Route path="/auth" element={<Auth />} />
       </Routes>
     </div>

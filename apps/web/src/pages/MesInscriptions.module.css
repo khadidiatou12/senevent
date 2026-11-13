@@ -1,0 +1,44 @@
+.page {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.titre {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 0.25rem;
+}
+
+.compteur {
+  color: #64748b;
+  margin-bottom: 1.5rem;
+}
+
+.grille {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.25rem;
+}
+
+.chargement {
+  text-align: center;
+  color: #64748b;
+  padding: 3rem 1rem;
+}
+
+.vide {
+  text-align: center;
+  padding: 4rem 1rem;
+  color: #64748b;
+}
+
+.videIcone {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.videTexte {
+  font-size: 1.1rem;
+}
