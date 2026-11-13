@@ -14,18 +14,15 @@ const App = () => {
   const [erreur, setErreur] = useState(null);
   const [session, setSession] = useState(null);
 
-  // Gestion de la session Supabase
   useEffect(() => {
     getSupabase().auth.getSession().then(({ data }) => {
       setSession(data.session);
     });
-
     const { data: subscription } = getSupabase().auth.onAuthStateChange(
       (_event, newSession) => {
         setSession(newSession);
       }
     );
-
     return () => subscription.subscription.unsubscribe();
   }, []);
 
@@ -49,27 +46,28 @@ const App = () => {
   return (
     <div className={styles.container}>
       <NavBar session={session} />
-      <h1 className={styles.titre}>SenEvent --- Evenements a Dakar</h1>
       <Routes>
         <Route
           path="/"
           element={
-            <Accueil
-              evenements={evenements}
-              chargement={chargement}
-              erreur={erreur}
-              onReessayer={charger}
-            />
+            <>
+              <div className={styles.hero}>
+                <h1 className={styles.heroTitre}>SenEvent</h1>
+                <p className={styles.heroSousTitre}>
+                  Tous les evenements a Dakar, au meme endroit
+                </p>
+              </div>
+              <Accueil
+                evenements={evenements}
+                chargement={chargement}
+                erreur={erreur}
+                onReessayer={charger}
+              />
+            </>
           }
         />
-        <Route
-          path="/nouveau"
-          element={<PageNouveau onAjoutReussi={charger} />}
-        />
-        <Route
-          path="/evenement/:id"
-          element={<PageDetail evenements={evenements} session={session} />}
-        />
+        <Route path="/nouveau" element={<PageNouveau onAjoutReussi={charger} />} />
+        <Route path="/evenement/:id" element={<PageDetail evenements={evenements} session={session} />} />
         <Route path="/auth" element={<Auth />} />
       </Routes>
     </div>

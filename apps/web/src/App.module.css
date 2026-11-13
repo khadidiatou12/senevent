@@ -107,3 +107,23 @@
   font-style: italic;
   margin-top: 0.5rem;
 }
+
+.hero {
+  text-align: center;
+  padding: 2rem 1rem 1.5rem;
+}
+
+.heroTitre {
+  font-size: 2.8rem;
+  font-weight: 800;
+  color: #1a3a5c;
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+
+.heroSousTitre {
+  font-size: 1.05rem;
+  color: #7a8aa0;
+  margin: 0.4rem 0 0;
+  font-weight: 500;
+}
