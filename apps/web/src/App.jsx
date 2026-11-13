@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
 import { getEvenements, getSupabase } from "@senevent/shared";
+import Landing from "./pages/Landing";
 import Accueil from "./pages/Accueil";
 import PageNouveau from "./pages/PageNouveau";
 import PageDetail from "./pages/PageDetail";
@@ -48,23 +49,16 @@ const App = () => {
     <div className={styles.container}>
       <NavBar session={session} />
       <Routes>
+        <Route path="/" element={<Landing />} />
         <Route
-          path="/"
+          path="/evenements"
           element={
-            <>
-              <div className={styles.hero}>
-                <h1 className={styles.heroTitre}>SenEvent</h1>
-                <p className={styles.heroSousTitre}>
-                  Tous les evenements a Dakar, au meme endroit
-                </p>
-              </div>
-              <Accueil
-                evenements={evenements}
-                chargement={chargement}
-                erreur={erreur}
-                onReessayer={charger}
-              />
-            </>
+            <Accueil
+              evenements={evenements}
+              chargement={chargement}
+              erreur={erreur}
+              onReessayer={charger}
+            />
           }
         />
         <Route path="/nouveau" element={<PageNouveau onAjoutReussi={charger} />} />

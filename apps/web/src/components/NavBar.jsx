@@ -12,10 +12,10 @@ const NavBar = ({ session }) => {
 
   return (
     <nav className={styles.navbar}>
-      <div className={styles.logo}>SenEvent</div>
+      <NavLink to="/" className={styles.logo}>SenEvent</NavLink>
       <div className={styles.liens}>
-        <NavLink to="/" end className={lienActif}>
-          Accueil
+        <NavLink to="/evenements" className={lienActif}>
+          Evenements
         </NavLink>
         {session && (
           <NavLink to="/nouveau" className={lienActif}>
