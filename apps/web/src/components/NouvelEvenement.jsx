@@ -8,6 +8,7 @@ function NouvelEvenement({ onAjoutReussi }) {
   const [lieuNom, setLieuNom] = useState("");
   const [dateDebut, setDateDebut] = useState("");
   const [prix, setPrix] = useState("");
+  const [imageUrl, setImageUrl] = useState("");
   const [erreurs, setErreurs] = useState({});
   const [erreurServeur, setErreurServeur] = useState(null);
   const [enCours, setEnCours] = useState(false);
@@ -39,7 +40,6 @@ function NouvelEvenement({ onAjoutReussi }) {
 
     setEnCours(true);
 
-    // Recuperer l'utilisateur connecte
     const {
       data: { user },
     } = await getSupabase().auth.getUser();
@@ -57,10 +57,10 @@ function NouvelEvenement({ onAjoutReussi }) {
         lieu_nom: lieuNom.trim(),
         date_debut: dateDebut,
         prix: Number(prix),
-        image_url: "https://placehold.co/400x250/1a3a5c/fff?text=Nouveau",
+        image_url: imageUrl.trim() || null,
         organisateur_id: user.id,
       });
-      onAjoutReussi(); // demande a App de recharger la liste
+      onAjoutReussi();
     } catch (err) {
       setErreurServeur(err.message);
     } finally {
@@ -91,7 +91,8 @@ function NouvelEvenement({ onAjoutReussi }) {
           <option value="concert">Concert</option>
           <option value="expo">Expo</option>
           <option value="conference">Conférence</option>
-          <option value="sport">Sport</option>
+          <option value="atelier">Atelier</option>
+          <option value="soutenance">Soutenance</option>
         </select>
       </div>
       <div className={styles.champ}>
@@ -125,6 +126,23 @@ function NouvelEvenement({ onAjoutReussi }) {
           onChange={(e) => setPrix(e.target.value)}
         />
         {erreurs.prix && <p className={styles.erreur}>{erreurs.prix}</p>}
+      </div>
+      <div className={styles.champ}>
+        <label className={styles.label}>Image (lien) — optionnel</label>
+        <input
+          className={styles.input}
+          type="url"
+          placeholder="https://exemple.com/mon-image.jpg"
+          value={imageUrl}
+          onChange={(e) => setImageUrl(e.target.value)}
+        />
+        {imageUrl.trim() && (
+          <img
+            src={imageUrl.trim()}
+            alt="Apercu"
+            className={styles.apercu}
+          />
+        )}
       </div>
 
       {erreurServeur && (
