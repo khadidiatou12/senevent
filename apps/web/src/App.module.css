@@ -43,3 +43,67 @@
   font-style: italic;
   padding: 1rem;
 }
+.filtres {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+  margin: 0.8rem 0;
+}
+
+.chip {
+  border: 1px solid #d0d9e4;
+  background: #fff;
+  color: #556;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: capitalize;
+  padding: 0.4rem 0.95rem;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.chip:hover {
+  border-color: #1a3a5c;
+  color: #1a3a5c;
+}
+
+.chipActif {
+  background: #1a3a5c;
+  color: #fff;
+  border-color: #1a3a5c;
+}
+
+.boutonAjout {
+  display: inline-block;
+  background: #1a3a5c;
+  color: #fff;
+  padding: 0.65rem 1.4rem;
+  border-radius: 10px;
+  text-decoration: none;
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(26, 58, 92, 0.2);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.boutonAjout:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 14px rgba(26, 58, 92, 0.3);
+}
+
+.vide {
+  text-align: center;
+  padding: 2.5rem 1rem;
+}
+
+.videIcone {
+  font-size: 3rem;
+  opacity: 0.5;
+}
+
+.videTexte {
+  color: #888;
+  font-style: italic;
+  margin-top: 0.5rem;
+}

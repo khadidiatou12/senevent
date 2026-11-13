@@ -1,8 +1,5 @@
-import {
-  createClient,
-  SupabaseClient,
-  SupabaseClientOptions,
-} from "@supabase/supabase-js";
+import { createClient, SupabaseClient } from "@supabase/supabase-js";
+import type { SupabaseClientOptions } from "@supabase/supabase-js";
 
 let client: SupabaseClient | null = null;
 
