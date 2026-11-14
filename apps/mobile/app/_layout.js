@@ -27,6 +27,7 @@ export default function RootLayout() {
             headerTintColor: "#fff",
           }}
         >
+          <Stack.Screen name="index" options={{ headerShown: false }} />
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen name="evenement/[id]" options={{ title: "Detail" }} />
           <Stack.Screen name="nouveau" options={{ title: "Nouvel evenement" }} />
